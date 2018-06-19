@@ -11,8 +11,10 @@ public class User {
 	
 	@Id
     private String id;
+	
 	@NotBlank
     @Size(max=25)
+	@NotBlank
 	private String name;
 	@NotBlank
     @Size(max=25)
@@ -21,6 +23,10 @@ public class User {
 	@NotBlank
     @Size(max=20)
 	private String mobilePhone;
+	@Size(max=25)
+	private String email;
+	
+	private Roles rol;
 	
 	public String getId() {
 		return id;
@@ -51,6 +57,18 @@ public class User {
 	}
 	public void setMobilePhone(String mobilePhone) {
 		this.mobilePhone = mobilePhone;
+	}
+	public Roles getRol() {
+		return rol;
+	}
+	public void setRol(Roles rol) {
+		this.rol = rol;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	@Override
 	public String toString() {
