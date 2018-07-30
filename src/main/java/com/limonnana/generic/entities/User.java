@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="user")
@@ -19,10 +20,12 @@ public class User {
 	@NotBlank
     @Size(max=25)
 	private String lastName;
+	@NotBlank
 	private String password;
 	@NotBlank
     @Size(max=20)
-	private String mobilePhone;
+	private String phone;
+	@NotBlank
 	@Size(max=25)
 	private String email;
 	
@@ -52,11 +55,11 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getMobilePhone() {
-		return mobilePhone;
+	public String getPhone() {
+		return phone;
 	}
-	public void setMobilePhone(String mobilePhone) {
-		this.mobilePhone = mobilePhone;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	public Roles getRol() {
 		return rol;
