@@ -8,6 +8,7 @@ public class Loginuser implements Serializable{
 	private static final long serialVersionUID = 2955743771558339220L;
 	private String username;
 	private String password;
+	private String token;
 	
 	
 	public String getUsername() {
@@ -21,6 +22,12 @@ public class Loginuser implements Serializable{
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	

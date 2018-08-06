@@ -1,9 +1,12 @@
 package com.limonnana.generic.controllers;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.limonnana.generic.entities.Loginuser;
 import com.limonnana.generic.entities.User;
+import com.limonnana.generic.entities.UserSession;
 import com.limonnana.generic.repositories.UserRepository;
+import com.limonnana.generic.repositories.UserSessionRepository;
+
+import java.util.UUID;
 
 @RestController
 // @RequestMapping("/api")
@@ -22,6 +29,9 @@ public class UserController {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	UserSessionRepository userSessionRepository;
 
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String createUser(@RequestBody String user) {
@@ -69,14 +79,37 @@ public class UserController {
 		return usersJson;
 	}
 
-	@RequestMapping(value = "/logintest", method = RequestMethod.POST)
-	public String showWelcomePage(@RequestBody String loginuser) {
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String login(@RequestBody String loginuser) {
 		System.out.println(loginuser);
 		Gson g = new Gson();
 		Loginuser lo = g.fromJson(loginuser, Loginuser.class);
-		System.out.println("username: " + lo.getUsername() + " password: " + lo.getPassword());
-		return "Success";
+		User user = new User();
+		user.setEmail(lo.getUsername());
+		//user.setPassword(lo.getPassword());
+		Example<User> example = Example.of(user);
+		Optional<User> userOptional = userRepository.findOne(example);
+		String token = "";
+		String userId  = "";
+		if(userOptional.isPresent()){
+		User userFromDb = userOptional.get();
+		token = generateString();
+		UserSession userSession = new UserSession();
+		userId = userFromDb.getId();
+		userSession.setUserId(userId);
+		userSession.setStartSession(new Date());
+		userSession.setToken(token);
+		userSessionRepository.save(userSession);
+		}
+		String response = "{\"response\":\"Success\", \"userId\":\"" +  userId +  "\", \"token\":" + "\"" + token+"\"}";
+		System.out.println(response);
+		return response;
 
 	}
+	
+	public static String generateString() {
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        return  uuid;
+    }
 
 }
