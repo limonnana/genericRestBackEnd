@@ -33,5 +33,11 @@ public class UserSession {
 	public void setStartSession(Date startSession) {
 		this.startSession = startSession;
 	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
 }
