@@ -33,13 +33,15 @@ public class UserController {
 	@Autowired
 	UserSessionRepository userSessionRepository;
 
-	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String createUser(@RequestBody String user) {
+		System.out.println(user);
 		Gson gson = new Gson();
 		User u = gson.fromJson(user, User.class);
 		u = userRepository.save(u);
 		System.out.println(u);
-		return "Success";
+		
+		return "{\"response\":\"Success\"}";
 	}
 	
 	@RequestMapping(value = "/user/{id}")
@@ -61,13 +63,14 @@ public class UserController {
 		return "Success";
 	}
 	
-	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
 	public String updateUser(@RequestBody String user) {
 		Gson gson = new Gson();
 		User u = gson.fromJson(user, User.class);
 		u = userRepository.save(u);
 		System.out.println(u);
-		return "Success";
+		String response = "{\"response\":\"Success\"}";
+		return response;
 	}
 	
 	@RequestMapping(value = "/userList")
