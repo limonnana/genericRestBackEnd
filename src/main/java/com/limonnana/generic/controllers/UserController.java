@@ -36,6 +36,9 @@ public class UserController {
 	UserRepository userRepository;
 	
 	@Autowired
+    MongoTemplate mongoTemplate;
+	
+	@Autowired
 	UserSessionRepository userSessionRepository;
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -91,7 +94,6 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(@RequestBody String loginuser) {
 		System.out.println(loginuser);
-		MongoTemplate mt = new MongoTemplate();
 		Gson g = new Gson();
 		Loginuser lo = g.fromJson(loginuser, Loginuser.class);
 		User user = new User();
@@ -100,20 +102,23 @@ public class UserController {
 		Example<User> example = Example.of(user);
 		Query query = new Query();
 		query.addCriteria(Criteria.where("email").is(lo.getUsername()));
-		 mongoTemplate.find(query, User.class);
-		Optional<User> userOptional = userRepository.   //findOne(example);
+		List<User> userList =  mongoTemplate.find(query, User.class);
+		
+		//Optional<User> userOptional = userRepository.   //findOne(example);
 		String token = "";
 		String userId  = "";
 		String response = "";
-		if(userOptional.isPresent()){
-		User userFromDb = userOptional.get();
-		token = generateString();
-		UserSession userSession = new UserSession();
-		userId = userFromDb.getId();
-		userSession.setUserId(userId);
-		userSession.setStartSession(new Date());
-		userSession.setToken(token);
-		userSessionRepository.save(userSession);
+		//if(userOptional.isPresent()){
+		//User userFromDb = userOptional.get();
+		if(userList != null && userList.size() > 0){
+			User userFromDb = userList.get(0);
+			token = generateString();
+			UserSession userSession = new UserSession();
+			userId = userFromDb.getId();
+			userSession.setUserId(userId);
+			userSession.setStartSession(new Date());
+			userSession.setToken(token);
+			userSessionRepository.save(userSession);
 		   
 	       response = "{\"response\":\"Success\", \"userId\":\"" +  userId +  "\", \"token\":" + "\"" + token+"\"}";
 		}else{
