@@ -82,6 +82,16 @@ public class UserController {
 		return response;
 	}
 	
+	@RequestMapping(value = "/updatePassword", method = RequestMethod.PUT)
+	public String updatePassword(@RequestBody String loginUser) {
+		Gson gson = new Gson();
+		Loginuser u = gson.fromJson(loginUser, Loginuser.class);
+		//u = userRepository.u(u);
+		System.out.println(u.getPassword() + " " + u.getId());
+		String response = "{\"response\":\"Success\"}";
+		return response;
+	}
+	
 	@RequestMapping(value = "/userList")
 	public String getUserList(){
 		List<User> userList = userRepository.findAll();
@@ -96,21 +106,16 @@ public class UserController {
 		System.out.println(loginuser);
 		Gson g = new Gson();
 		Loginuser lo = g.fromJson(loginuser, Loginuser.class);
-		User user = new User();
-		user.setEmail(lo.getUsername());
-		//user.setPassword(lo.getPassword());
-		Example<User> example = Example.of(user);
+	
 		Query query = new Query();
 		query.addCriteria(Criteria.where("email").is(lo.getUsername()));
 		List<User> userList =  mongoTemplate.find(query, User.class);
 		
-		//Optional<User> userOptional = userRepository.   //findOne(example);
 		String token = "";
 		String userId  = "";
 		String response = "";
-		//if(userOptional.isPresent()){
-		//User userFromDb = userOptional.get();
-		if(userList != null && userList.size() > 0){
+		
+		if(authenticate(userList, lo)){
 			User userFromDb = userList.get(0);
 			token = generateString();
 			UserSession userSession = new UserSession();
@@ -128,6 +133,19 @@ public class UserController {
 		System.out.println(response);
 		return response;
 
+	}
+	
+	private boolean authenticate(List<User> l, Loginuser loginuser){
+		boolean result = false;
+		
+		if(l != null && l.size() > 0 ){
+			String pass = l.get(0).getPassword();
+			System.out.print("password: " + pass);
+			if(loginuser.getPassword().equals(pass)){
+				result = true;
+			}
+		}
+		return result;
 	}
 	
 	public static String generateString() {
