@@ -28,7 +28,6 @@ import com.limonnana.generic.repositories.UserSessionRepository;
 import java.util.UUID;
 
 @RestController
-// @RequestMapping("/api")
 @CrossOrigin("*")
 public class UserController {
 
@@ -86,7 +85,9 @@ public class UserController {
 	public String updatePassword(@RequestBody String loginUser) {
 		Gson gson = new Gson();
 		Loginuser u = gson.fromJson(loginUser, Loginuser.class);
-		//u = userRepository.u(u);
+		User user = getUserById(u.getId());
+		user.setPassword(u.getPassword());
+	    userRepository.save(user);
 		System.out.println(u.getPassword() + " " + u.getId());
 		String response = "{\"response\":\"Success\"}";
 		return response;
@@ -104,22 +105,20 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(@RequestBody String loginuser) {
 		System.out.println(loginuser);
-		Gson g = new Gson();
-		Loginuser lo = g.fromJson(loginuser, Loginuser.class);
-	
-		Query query = new Query();
-		query.addCriteria(Criteria.where("email").is(lo.getUsername()));
-		List<User> userList =  mongoTemplate.find(query, User.class);
 		
 		String token = "";
 		String userId  = "";
 		String response = "";
+		Gson g = new Gson();
 		
-		if(authenticate(userList, lo)){
-			User userFromDb = userList.get(0);
+		Loginuser lo = g.fromJson(loginuser, Loginuser.class);
+	    User userFromDB = getUserByEmail(lo.getUsername());
+		
+		if(authenticate(userFromDB, lo)){
+		
 			token = generateString();
 			UserSession userSession = new UserSession();
-			userId = userFromDb.getId();
+			userId = userFromDB.getId();
 			userSession.setUserId(userId);
 			userSession.setStartSession(new Date());
 			userSession.setToken(token);
@@ -130,21 +129,57 @@ public class UserController {
 			response =  "{\"response\":\"Failed\"}";
 		}
 		
-		System.out.println(response);
 		return response;
 
 	}
 	
-	private boolean authenticate(List<User> l, Loginuser loginuser){
+	@RequestMapping(value = "/checkUserAlreadyRegistered/{email}", method = RequestMethod.GET)
+	public boolean checkUserAlreadyRegistered(@PathVariable String email){
+		System.out.println(" email: " + email);
 		boolean result = false;
 		
-		if(l != null && l.size() > 0 ){
-			String pass = l.get(0).getPassword();
-			System.out.print("password: " + pass);
-			if(loginuser.getPassword().equals(pass)){
+		User u = getUserByEmail(email);
+		if(u != null && u.getEmail() != ""){
+			result = true;
+		}
+		return result;
+	}
+	
+	private User getUserByEmail(String email){
+		
+		User result = null;
+		Query query = new Query();
+		query.addCriteria(Criteria.where("email").is(email));
+		List<User> userList =  mongoTemplate.find(query, User.class);
+		
+		if(userList != null && userList.size() > 0 ){
+			result = userList.get(0);
+		}
+		return result;
+	}
+	
+    private User getUserById(String userId){
+		
+		User result = null;
+		Query query = new Query();
+		query.addCriteria(Criteria.where("id").is(userId));
+		List<User> userList =  mongoTemplate.find(query, User.class);
+		
+		if(userList != null && userList.size() > 0 ){
+			result = userList.get(0);
+		}
+		return result;
+	}
+	
+	private boolean authenticate(User u, Loginuser loginuser){
+		boolean result = false;
+		
+			String pass = u.getPassword();
+			
+			if(u != null && loginuser.getPassword().equals(pass)){
 				result = true;
 			}
-		}
+			
 		return result;
 	}
 	
