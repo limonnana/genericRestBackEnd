@@ -173,12 +173,14 @@ public class UserController {
 	
 	private boolean authenticate(User u, Loginuser loginuser){
 		boolean result = false;
-		
+		    
+		if(u != null && loginuser != null){
 			String pass = u.getPassword();
 			
 			if(u != null && loginuser.getPassword().equals(pass)){
 				result = true;
 			}
+		}
 			
 		return result;
 	}

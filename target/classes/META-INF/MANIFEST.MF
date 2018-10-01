@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: generic
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: Papi
+Built-By: rosen
 Implementation-Vendor-Id: com.limonnana
-Build-Jdk: 1.8.0_162
+Build-Jdk: 1.8.0_172
 Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
  ot-starter-parent/generic
 Created-By: Maven Integration for Eclipse
