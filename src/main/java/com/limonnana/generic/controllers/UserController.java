@@ -114,7 +114,7 @@ public class UserController {
 		Loginuser lo = g.fromJson(loginuser, Loginuser.class);
 	    User userFromDB = getUserByEmail(lo.getUsername());
 		
-		if(authenticate(userFromDB, lo)){
+		if(userFromDB != null && authenticate(userFromDB, lo)){
 		
 			token = generateString();
 			UserSession userSession = new UserSession();
