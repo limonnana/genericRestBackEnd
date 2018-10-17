@@ -12,6 +12,7 @@ public class Loginuser implements Serializable{
 	private String token;
 	
 	
+	
 	public String getUsername() {
 		return username;
 	}
@@ -36,6 +37,7 @@ public class Loginuser implements Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
+	
 	
 	
 

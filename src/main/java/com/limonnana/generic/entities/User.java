@@ -28,7 +28,7 @@ public class User {
 	@Size(max=25)
 	private String email;
 	
-	private Roles rol;
+	private Rol rol;
 	
 	public String getId() {
 		return id;
@@ -60,10 +60,10 @@ public class User {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public Roles getRol() {
+	public Rol getRol() {
 		return rol;
 	}
-	public void setRol(Roles rol) {
+	public void setRol(Rol rol) {
 		this.rol = rol;
 	}
 	public String getEmail() {

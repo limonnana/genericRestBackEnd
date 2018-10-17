@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.limonnana.generic.entities.Loginuser;
+import com.limonnana.generic.entities.Rol;
 import com.limonnana.generic.entities.User;
+import com.limonnana.generic.entities.UserRestResponse;
 import com.limonnana.generic.entities.UserSession;
 import com.limonnana.generic.repositories.UserRepository;
 import com.limonnana.generic.repositories.UserSessionRepository;
@@ -45,6 +47,7 @@ public class UserController {
 		System.out.println(user);
 		Gson gson = new Gson();
 		User u = gson.fromJson(user, User.class);
+		u.setRol(Rol.USER);
 		u = userRepository.save(u);
 		System.out.println(u);
 		
@@ -108,6 +111,7 @@ public class UserController {
 		
 		String token = "";
 		String userId  = "";
+		String userRole = "";
 		String response = "";
 		Gson g = new Gson();
 		
@@ -119,12 +123,20 @@ public class UserController {
 			token = generateString();
 			UserSession userSession = new UserSession();
 			userId = userFromDB.getId();
+			if(userFromDB.getRol() != null)
+			userRole = userFromDB.getRol().toString();
 			userSession.setUserId(userId);
 			userSession.setStartSession(new Date());
 			userSession.setToken(token);
 			userSessionRepository.save(userSession);
-		   
-	       response = "{\"response\":\"Success\", \"userId\":\"" +  userId +  "\", \"token\":" + "\"" + token+"\"}";
+			UserRestResponse userResponse = new UserRestResponse();
+			userResponse.setResponse("Success");
+			userResponse.setToken(token);
+			userResponse.setUserId(userId);
+			userResponse.setUserRole(userRole);
+			
+			response = g.toJson(userResponse);
+			
 		}else{
 			response =  "{\"response\":\"Failed\"}";
 		}
