@@ -157,6 +157,15 @@ public class UserController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/setAdmin")
+	public void setAdmin(){
+		User u = getUserByEmail("rosenzvaig@gmail.com");
+		u.setRol(Rol.ADMIN);
+		userRepository.save(u);
+	}
+	
+	
+	
 	private User getUserByEmail(String email){
 		
 		User result = null;
