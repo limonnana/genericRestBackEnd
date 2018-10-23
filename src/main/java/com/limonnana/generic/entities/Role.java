@@ -1,6 +1,6 @@
 package com.limonnana.generic.entities;
 
-public enum Rol {
+public enum Role {
 	
 	SUPER_ADMIN, ADMIN, TRUSTED_USER, USER;
 

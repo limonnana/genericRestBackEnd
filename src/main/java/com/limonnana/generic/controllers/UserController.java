@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.limonnana.generic.entities.Loginuser;
-import com.limonnana.generic.entities.Rol;
+import com.limonnana.generic.entities.Role;
 import com.limonnana.generic.entities.User;
 import com.limonnana.generic.entities.UserRestResponse;
 import com.limonnana.generic.entities.UserSession;
@@ -47,7 +47,7 @@ public class UserController {
 		System.out.println(user);
 		Gson gson = new Gson();
 		User u = gson.fromJson(user, User.class);
-		u.setRol(Rol.USER);
+		u.setRole(Role.USER);
 		u = userRepository.save(u);
 		System.out.println(u);
 		
@@ -123,8 +123,8 @@ public class UserController {
 			token = generateString();
 			UserSession userSession = new UserSession();
 			userId = userFromDB.getId();
-			if(userFromDB.getRol() != null)
-			userRole = userFromDB.getRol().toString();
+			if(userFromDB.getRole() != null)
+			userRole = userFromDB.getRole().toString();
 			userSession.setUserId(userId);
 			userSession.setStartSession(new Date());
 			userSession.setToken(token);
@@ -160,7 +160,7 @@ public class UserController {
 	@RequestMapping(value = "/setAdmin")
 	public void setAdmin(){
 		User u = getUserByEmail("rosenzvaig@gmail.com");
-		u.setRol(Rol.ADMIN);
+		u.setRole(Role.ADMIN);
 		userRepository.save(u);
 	}
 	
