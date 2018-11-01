@@ -4,7 +4,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="user")
@@ -28,7 +27,7 @@ public class User {
 	@Size(max=25)
 	private String email;
 	
-	private Rol rol;
+	private Role role;
 	
 	public String getId() {
 		return id;
@@ -60,11 +59,11 @@ public class User {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public Rol getRol() {
-		return rol;
+	public Role getRole() {
+		return role;
 	}
-	public void setRol(Rol rol) {
-		this.rol = rol;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	public String getEmail() {
 		return email;
